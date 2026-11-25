@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>If I Could Tell You, I Would</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="page">
+  <header class="mast">
+    <h1>If I could tell you, <span>I would</span></h1>
+  </header>
+
+  <main class="app" aria-label="Exercise">
+
+    <!-- 1. FIRST ROUND: minimal instruction, free typing -->
+    <section class="view" id="stage-first">
+      <div class="stage">
+        <div class="sentence given">If I could tell you, I would.</div>
+      </div>
+      <p class="ask">Write two new sentences. Use only these words.</p>
+      <form id="first-form" class="first-form" autocomplete="off">
+        <label class="label" for="s1">One</label>
+        <input class="line" id="s1" type="text" autocapitalize="off" autocorrect="off" spellcheck="false" maxlength="120">
+        <label class="label" for="s2">Two</label>
+        <input class="line" id="s2" type="text" autocapitalize="off" autocorrect="off" spellcheck="false" maxlength="120">
+        <p class="error" id="first-error" role="alert"></p>
+        <div class="row">
+          <button class="chip solid big" id="first-done" type="submit">Done</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- 2. THE ROOM: everyone's answers side by side -->
+    <section class="view" id="stage-room" hidden>
+      <p class="label" id="room-label">The room</p>
+      <ul class="list wall" id="wall"></ul>
+      <p class="fine" id="room-note"></p>
+      <div class="row">
+        <button class="chip solid big" id="room-next">Here are three more</button>
+      </div>
+    </section>
+
+    <!-- 3. THE REVEAL: three sentences nobody wrote -->
+    <section class="view" id="stage-reveal" hidden>
+      <p class="label" id="reveal-count"></p>
+      <div class="stage tall">
+        <div class="sentence huge" id="reveal-sentence" aria-live="polite"></div>
+        <div class="stage-row">
+          <span class="count">Same words. Same rules.</span>
+          <button class="play" id="reveal-again">Hear it</button>
+        </div>
+      </div>
+      <div class="row">
+        <button class="chip solid big" id="reveal-next">Next</button>
+      </div>
+    </section>
+
+    <!-- 4. THE MIRROR: what those did, against what you did -->
+    <section class="view" id="stage-mirror" hidden>
+      <p class="ask">Now look at yours.</p>
+      <ul class="list" id="mirror-yours"></ul>
+      <p class="label">What the last three did</p>
+      <ul class="mirror" id="mirror-moves"></ul>
+      <div class="row">
+        <button class="chip solid big" id="mirror-next">Go again</button>
+      </div>
+    </section>
+
+    <!-- 5. FREE PLAY: words as notes, then the motif lab -->
+    <section id="stage-play" hidden>
+      <div class="tabs" role="tablist">
+        <button id="tab-words" role="tab" aria-selected="true" aria-controls="view-words">Words</button>
+        <button id="tab-motif" role="tab" aria-selected="false" aria-controls="view-motif">Motif</button>
+      </div>
+
+      <div class="view" id="view-words" role="tabpanel" aria-labelledby="tab-words">
+        <div class="stage">
+          <div class="sentence" id="sentence" aria-live="polite"></div>
+          <div class="stage-row">
+            <span class="count" id="count"></span>
+            <button class="play" id="play-words">Play</button>
+          </div>
+        </div>
+
+        <div>
+          <p class="label gap">Your only words</p>
+          <div class="bank" id="bank"></div>
+        </div>
+
+        <div>
+          <p class="label gap">Mark the last word</p>
+          <div class="row">
+            <button class="chip p" id="p-bang" aria-label="Add exclamation mark">!</button>
+            <button class="chip p" id="p-q" aria-label="Question mark">?</button>
+            <button class="chip p" id="p-comma" aria-label="Comma">,</button>
+            <button class="chip p" id="p-dot" aria-label="Period">.</button>
+            <button class="chip p" id="p-ell" aria-label="Ellipsis">…</button>
+            <button class="chip" id="undo">Undo</button>
+            <button class="chip" id="clear">Clear</button>
+          </div>
+        </div>
+
+        <div class="stack">
+          <p class="label" id="moves-label">Moves you have found</p>
+          <div class="moves" id="moves"></div>
+          <p class="coach" id="coach"></p>
+        </div>
+
+        <div class="row">
+          <button class="chip solid" id="keep">Keep this sentence</button>
+          <button class="chip" id="to-motif">Open as a motif</button>
+        </div>
+
+        <div class="stack">
+          <p class="label">Kept sentences</p>
+          <ul class="list" id="kept"></ul>
+        </div>
+      </div>
+
+      <div class="view" id="view-motif" role="tabpanel" aria-labelledby="tab-motif" hidden>
+        <div class="row between">
+          <p class="label" id="motif-source"></p>
+          <button class="play cobalt" id="play-motif">Play</button>
+        </div>
+        <div class="plot"><svg id="plot" viewBox="0 0 380 210" role="img" aria-label="Melodic shape"></svg></div>
+        <div class="readout" id="readout"></div>
+        <div>
+          <p class="label gap">Same moves, on notes</p>
+          <div class="row">
+            <button class="chip" id="op-up">Step up</button>
+            <button class="chip" id="op-down">Step down</button>
+            <button class="chip" id="op-rev">Reverse</button>
+            <button class="chip" id="op-mir">Mirror</button>
+            <button class="chip" id="op-reset">Reset</button>
+          </div>
+        </div>
+        <label class="pin" for="pin"><input type="checkbox" id="pin"> Hold the first note while stepping</label>
+        <div class="keyrow">
+          <p class="label">Key</p>
+          <button class="chip" id="key-down" aria-label="Key down a half step">−</button>
+          <span class="keyname" id="keyname"></span>
+          <button class="chip" id="key-up" aria-label="Key up a half step">+</button>
+        </div>
+        <p class="trail" id="trail"></p>
+        <div class="row">
+          <button class="chip" id="src-workshop">Workshop motif 6 2 8 3 7</button>
+          <button class="chip" id="src-sentence">My sentence</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="row">
+      <button class="link" id="restart">Start over</button>
+      <button class="link" id="skip">Skip to free play</button>
+    </div>
+    <details>
+      <summary>Notes for reviewers</summary>
+      <p>The first screen gives one instruction and a blank line, as in the room. Punctuation, repeats and short answers are all accepted, and none of them is suggested.</p>
+      <p>The room wall shows the student's two sentences among sample answers. In this proof of concept the classmates are canned. A live room needs a small shared backend and a room code.</p>
+      <p>The three sentences in the reveal are the ones shown in the session. Sound starts here: each word is a pitch and each mark changes how it is played.</p>
+      <p>Exercise by Roger Dickerson, as taught by Terence Blanchard.</p>
+    </details>
+  </footer>
+</div>
+<script src="app.js"></script>
+</body>
+</html>
