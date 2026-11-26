@@ -6,28 +6,28 @@
 <title>If I Could Tell You, I Would</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <div class="page">
-  <header class="mast">
-    <h1>If I could tell you, <span>I would</span></h1>
+  <header class="band">
+    <h1 class="sr">If I could tell you, I would</h1>
+    <span id="band-left">Round one</span>
+    <span id="band-right">Seven words</span>
   </header>
 
   <main class="app" aria-label="Exercise">
 
     <!-- 1. FIRST ROUND: minimal instruction, free typing -->
     <section class="view" id="stage-first">
-      <div class="stage">
-        <div class="sentence given">If I could tell you, I would.</div>
-      </div>
+      <p class="given">If I could<br>tell you,<br><span>I would.</span></p>
       <p class="ask">Write two new sentences. Use only these words.</p>
       <form id="first-form" class="first-form" autocomplete="off">
         <label class="label" for="s1">One</label>
-        <input class="line" id="s1" type="text" autocapitalize="off" autocorrect="off" spellcheck="false" maxlength="120">
+        <input class="line" id="s1" type="text" placeholder=" " autocapitalize="off" autocorrect="off" spellcheck="false" maxlength="120">
         <label class="label" for="s2">Two</label>
-        <input class="line" id="s2" type="text" autocapitalize="off" autocorrect="off" spellcheck="false" maxlength="120">
+        <input class="line" id="s2" type="text" placeholder=" " autocapitalize="off" autocorrect="off" spellcheck="false" maxlength="120">
         <p class="error" id="first-error" role="alert"></p>
         <div class="row">
           <button class="chip solid big" id="first-done" type="submit">Done</button>
@@ -37,7 +37,6 @@
 
     <!-- 2. THE ROOM: everyone's answers side by side -->
     <section class="view" id="stage-room" hidden>
-      <p class="label" id="room-label">The room</p>
       <ul class="list wall" id="wall"></ul>
       <p class="fine" id="room-note"></p>
       <div class="row">
@@ -47,15 +46,10 @@
 
     <!-- 3. THE REVEAL: three sentences nobody wrote -->
     <section class="view" id="stage-reveal" hidden>
-      <p class="label" id="reveal-count"></p>
-      <div class="stage tall">
-        <div class="sentence huge" id="reveal-sentence" aria-live="polite"></div>
-        <div class="stage-row">
-          <span class="count">Same words. Same rules.</span>
-          <button class="play" id="reveal-again">Hear it</button>
-        </div>
-      </div>
-      <div class="row">
+      <div class="sentence huge" id="reveal-sentence" aria-live="polite"></div>
+      <p class="same-rules">Same words. Same rules.</p>
+      <div class="pair">
+        <button class="chip big" id="reveal-again">Hear it</button>
         <button class="chip solid big" id="reveal-next">Next</button>
       </div>
     </section>
@@ -125,7 +119,7 @@
       <div class="view" id="view-motif" role="tabpanel" aria-labelledby="tab-motif" hidden>
         <div class="row between">
           <p class="label" id="motif-source"></p>
-          <button class="play cobalt" id="play-motif">Play</button>
+          <button class="play" id="play-motif">Play</button>
         </div>
         <div class="plot"><svg id="plot" viewBox="0 0 380 210" role="img" aria-label="Melodic shape"></svg></div>
         <div class="readout" id="readout"></div>

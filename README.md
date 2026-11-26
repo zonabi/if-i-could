@@ -12,6 +12,10 @@ Students get one sentence, "If I could tell you, I would", and one instruction: 
 4. **The mirror.**  The moves those three used, set against what the student did.
 5. **Free play.**  A word-tile builder with sound and a move tracker, then a motif lab that applies the same moves to notes (step, reverse, mirror, key change).
 
+## Look
+
+"Midnight Brass": deep indigo, a brass accent, tall condensed capitals (Anton) over DM Sans.  The screen flips from indigo to brass for the reveal.  Colours are the custom properties at the top of `styles.css`.
+
 ## What is simulated
 
 - **The room is canned.**  Classmates' answers come from `Room.others()` in `app.js`.  A live room needs a small shared backend (room code plus a realtime list, for example Supabase or Firebase) behind that same object.

@@ -150,7 +150,9 @@
       el.appendChild(e);
     }
     ph.forEach(function (t, i) {
-      var s = document.createElement("span"); s.className = "tok" + (i === active ? " on" : "");
+      var bangs = (t.p.match(/!/g) || []).length;
+      var s = document.createElement("span");
+      s.className = "tok" + (bangs ? " b" + bangs : "") + (i === active ? " on" : "");
       s.appendChild(document.createTextNode(show(t)));
       if (t.p) { var b = document.createElement("b"); b.textContent = t.p; s.appendChild(b); }
       el.appendChild(s);
@@ -186,9 +188,16 @@
   var mine = [];         /* free play: sentences the student kept */
 
   var STAGES = ["first", "room", "reveal", "mirror", "play"];
-  function go(stage) {
+  var BAND = {
+    first: ["Round one", "Seven words"], room: ["The room", ""], reveal: ["Three more", ""],
+    mirror: ["Your two", "Round one"], play: ["Free play", "Seven words"]
+  };
+  function go(stage, right) {
     stopHighlights();
     STAGES.forEach(function (s) { $("stage-" + s).hidden = s !== stage; });
+    document.body.classList.toggle("brass", stage === "reveal");   /* the room changes colour for the reveal */
+    $("band-left").textContent = BAND[stage][0];
+    $("band-right").textContent = right !== undefined ? right : BAND[stage][1];
     window.scrollTo(0, 0);
   }
 
@@ -205,8 +214,7 @@
     err.textContent = "";
     firstTyped = raw;
     first = parsed.map(function (p) { return p.phrase; });
-    renderRoom();
-    go("room");
+    go("room", renderRoom() + " sentences");
   });
 
   /* ---------- 2. the room ---------- */
@@ -224,15 +232,15 @@
     rows.splice(2, 0, { s: firstTyped[0], you: true });
     rows.splice(6, 0, { s: firstTyped[1], you: true });
     rows.forEach(function (r) { wall.appendChild(wallItem(r.s, r.you ? "you" : "", r.you)); });
-    $("room-label").textContent = "The room · " + rows.length + " sentences";
     $("room-note").textContent = Room.live ? "" : "Demo room. The other sentences are sample answers.";
+    return rows.length;
   }
   $("room-next").addEventListener("click", function () { revealAt = 0; go("reveal"); showReveal(true); });
 
   /* ---------- 3. the reveal ---------- */
   function showReveal(play) {
     var ph = REVEALS[revealAt], el = $("reveal-sentence");
-    $("reveal-count").textContent = (revealAt + 1) + " of " + REVEALS.length;
+    $("band-right").textContent = (revealAt + 1) + " of " + REVEALS.length;
     $("reveal-next").textContent = revealAt === REVEALS.length - 1 ? "Continue" : "Next";
     renderTokens(el, ph, -1);
     if (play) { playEvents(eventsOf(ph), function (i) { renderTokens(el, ph, i); }); }
@@ -388,16 +396,16 @@
     function y(d) { return bottom - (d - lo) * (bottom - top) / (hi - lo); }
     for (var d = lo; d <= hi; d++) {
       var tonic = (((d % 7) + 7) % 7) === 0;
-      plot.appendChild(svg("line", { x1: 8, x2: W - 8, y1: y(d), y2: y(d), stroke: tonic ? "#9aa2b8" : "#e3e6ee", "stroke-width": 1 }));
+      plot.appendChild(svg("line", { x1: 8, x2: W - 8, y1: y(d), y2: y(d), stroke: tonic ? "#5a64a8" : "#262d63", "stroke-width": 1 }));
     }
     function pts(arr) { return arr.map(function (v, i) { return x(i) + "," + y(v); }).join(" "); }
-    plot.appendChild(svg("polyline", { points: pts(motif.base), fill: "none", stroke: "#b4bacb", "stroke-width": 2, "stroke-dasharray": "4 5" }));
-    plot.appendChild(svg("polyline", { points: pts(motif.cur), fill: "none", stroke: "#2340e0", "stroke-width": 3.5, "stroke-linejoin": "round", "stroke-linecap": "round" }));
+    plot.appendChild(svg("polyline", { points: pts(motif.base), fill: "none", stroke: "#7c86c9", "stroke-width": 2, "stroke-dasharray": "4 5" }));
+    plot.appendChild(svg("polyline", { points: pts(motif.cur), fill: "none", stroke: "#e0a93b", "stroke-width": 3.5, "stroke-linejoin": "round", "stroke-linecap": "round" }));
     motif.cur.forEach(function (v, i) {
       var on = i === active;
-      plot.appendChild(svg("circle", { cx: x(i), cy: y(v), r: on ? 10 : 7, fill: on ? "#ee4b27" : "#2340e0", stroke: "#fff", "stroke-width": 2 }));
-      plot.appendChild(svg("text", { x: x(i), y: 176, "text-anchor": "middle", "font-family": "IBM Plex Mono, monospace", "font-size": 15, "font-weight": 500, fill: "#11162a" }, String(degree(v))));
-      plot.appendChild(svg("text", { x: x(i), y: 196, "text-anchor": "middle", "font-family": "IBM Plex Mono, monospace", "font-size": 12, fill: "#586078" }, noteName(v, motif.key)));
+      plot.appendChild(svg("circle", { cx: x(i), cy: y(v), r: on ? 10 : 7, fill: on ? "#f5efe0" : "#e0a93b", stroke: "#171c45", "stroke-width": 2 }));
+      plot.appendChild(svg("text", { x: x(i), y: 176, "text-anchor": "middle", "font-family": "DM Sans, sans-serif", "font-size": 15, "font-weight": 700, fill: "#f5efe0" }, String(degree(v))));
+      plot.appendChild(svg("text", { x: x(i), y: 196, "text-anchor": "middle", "font-family": "DM Sans, sans-serif", "font-size": 12, fill: "#9aa3d6" }, noteName(v, motif.key)));
     });
 
     var sB = steps(motif.base), sC = steps(motif.cur), iB = semis(motif.base, 0), iC = semis(motif.cur, motif.key);
