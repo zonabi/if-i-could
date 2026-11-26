@@ -92,7 +92,7 @@
   function copy(phrase) { return phrase.map(function (t) { return { w: t.w, p: t.p }; }); }
 
   var MOVES = [
-    { id: "reorder", name: "Reorder", hint: "new word order", eg: "would you tell",
+    { id: "reorder", name: "Reorder", hint: "new word order", eg: "would you tell?",
       nudge: "Every word is still in its old place. Start from the last word and see what the line wants to say." },
     { id: "omit", name: "Leave words out", short: "Leave out", hint: "fewer words", eg: "if you could",
       nudge: "You have used all seven. What is the shortest thing these words can say?" },
@@ -168,17 +168,17 @@
       return [
         "I would tell you if I could",
         "would I tell you if I could",
-        "I could tell you if I would",
+        "I could tell you",
         "could I tell you if I would",
-        "if I would tell you I could",
+        "if you could tell I would",
         "tell you I would if I could",
-        "I would if I could tell you"
+        "I would if I could"
       ];
     }
   };
 
   /* The three sentences shown in the session. */
-  var REVEALS = ["if you could", "would you tell", "tell! tell!! tell!!! if?"].map(parse);
+  var REVEALS = ["if you could", "would you tell?", "tell! tell!! tell!!! if?"].map(parse);
 
   /* ================= state ================= */
   var firstTyped = [];   /* the student's two sentences, as typed */
@@ -262,13 +262,14 @@
       if (mv.id === "breath") { return; }   /* not shown by the three; left to find in free play */
       var li = document.createElement("li"); if (did[mv.id]) { li.className = "found"; }
       var a = document.createElement("strong"); a.textContent = mv.name;
-      var st = document.createElement("span"); st.className = "st"; st.textContent = did[mv.id] ? "you did" : "you didn’t";
+      var st = document.createElement("span"); st.className = "st"; st.textContent = did[mv.id] ? "you did" : "";
       var eg = document.createElement("span"); eg.className = "eg"; eg.textContent = mv.eg;
       li.appendChild(a); li.appendChild(st); li.appendChild(eg);
       ul.appendChild(li);
     });
   }
-  $("mirror-next").addEventListener("click", function () { enterPlay(); });
+  $("mirror-again").addEventListener("click", function () { startOver(); });
+  $("mirror-play").addEventListener("click", function () { enterPlay(); });
 
   /* ---------- 5. free play: words ---------- */
   function enterPlay() {
@@ -485,11 +486,12 @@
   });
 
   /* ---------- footer ---------- */
-  $("restart").addEventListener("click", function () {
+  function startOver() {
     firstTyped = []; first = []; phrase = []; mine = [];
     $("s1").value = ""; $("s2").value = ""; $("first-error").textContent = "";
     go("first");
-  });
+  }
+  $("restart").addEventListener("click", startOver);
   $("skip").addEventListener("click", function () { firstTyped = []; first = []; enterPlay(); });
 
   renderMotif(-1);
